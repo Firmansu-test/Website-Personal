@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>文档翻译服务</title>
+    <style>
+        body {
+            font-family: 'Fangsong', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #e9ecef;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .header {
+            text-align: center;
+            padding: 20px;
+            background: #343a40;
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            min-height: 500px;
+        }
+        .input-panel, .output-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
+        }
+        .input-panel:hover, .output-panel:hover {
+            transform: translateY(-5px);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #495057;
+        }
+        .language-select, .text-input, .file-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            transition: border-color 0.2s;
+        }
+        .language-select:focus, .text-input:focus, .file-input:focus {
+            border-color: #80bdff;
+            outline: none;
+        }
+        .submit-btn {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            white-space: pre-wrap;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            min-height: 200px;
+        }
+        .error {
+            color: #d32f2f;
+            padding: 10px;
+            background: #ffebee;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .panel-title {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 1.5em;
+            border-bottom: 2px solid #dee2e6;
+            padding-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>文档翻译服务</h1>
+        </div>
+        <div class="content">
+            <div class="input-panel">
+                <h2 class="panel-title">输入</h2>
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label>选择文件或输入文本：</label>
+                        <input type="file" name="file" class="file-input">
+                        <textarea name="text" class="text-input" placeholder="或者在此输入要翻译的文本..."></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>源语言：</label>
+                        <select name="source_lang" class="language-select">
+                            <option value="auto">自动检测</option>
+                            <option value="zh">中文</option>
+                            <option value="en">英语</option>
+                            <option value="ja">日语</option>
+                            <option value="ko">韩语</option>
+                            <option value="fr">法语</option>
+                            <option value="de">德语</option>
+                            <option value="es">西班牙语</option>
+                            <option value="it">意大利语</option>
+                            <option value="ru">俄语</option>
+                            <option value="pt">葡萄牙语</option>
+                            <option value="id">印尼语</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>目标语言：</label>
+                        <select name="target_lang" class="language-select">
+                            <option value="zh">中文</option>
+                            <option value="en">英语</option>
+                            <option value="ja">日语</option>
+                            <option value="ko">韩语</option>
+                            <option value="fr">法语</option>
+                            <option value="de">德语</option>
+                            <option value="es">西班牙语</option>
+                            <option value="it">意大利语</option>
+                            <option value="ru">俄语</option>
+                            <option value="pt">葡萄牙语</option>
+                            <option value="id">印尼语</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="submit-btn">翻译</button>
+                </form>
+            </div>
+            <div class="output-panel">
+                <h2 class="panel-title">输出</h2>
+                <div id="result" class="result"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('uploadForm').onsubmit = async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const resultDiv = document.getElementById('result');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            
+            try {
+                submitBtn.disabled = true;
+                submitBtn.textContent = '翻译中...';
+                
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.error) {
+                    resultDiv.innerHTML = `<div class="error">${data.error}</div>`;
+                } else {
+                    resultDiv.innerHTML = `
+                        <div class="result-content">
+                            <h3>原文：</h3>
+                            <div>${data.original_text}</div>
+                            <h3>翻译：</h3>
+                            <div>${data.translated_text}</div>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                resultDiv.innerHTML = `<div class="error">处理失败：${error.message}</div>`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '翻译';
+            }
+        };
+
+        // 处理文件和文本输入的切换
+        const fileInput = document.querySelector('input[type="file"]');
+        const textInput = document.querySelector('textarea[name="text"]');
+
+        fileInput.addEventListener('change', () => {
+            if (fileInput.value) {
+                textInput.disabled = true;
+            } else {
+                textInput.disabled = false;
+            }
+        });
+
+        textInput.addEventListener('input', () => {
+            if (textInput.value) {
+                fileInput.disabled = true;
+            } else {
+                fileInput.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html> 
