@@ -84,7 +84,5 @@ def upload_file():
             os.remove(file_path)
 
 if __name__ == '__main__':
-    # 使用环境变量获取端口，如果没有则使用默认值5000
-    port = int(os.getenv('PORT', 5000))
-    # host='0.0.0.0' 允许外部访问
+    port = int(os.getenv('PORT', '5000'))
     app.run(host='0.0.0.0', port=port, debug=False) 
