@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 load_dotenv()
 
 app = Flask(__name__, 
-    template_folder=os.path.abspath('templates'))
+    template_folder=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates'))
 app.config['UPLOAD_FOLDER'] = os.getenv('UPLOAD_FOLDER', 'uploads')
 app.config['MAX_CONTENT_LENGTH'] = int(os.getenv('MAX_CONTENT_LENGTH', 10 * 1024 * 1024))
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'default-secret-key')
@@ -42,6 +42,8 @@ def index():
     try:
         logger.debug(f"Template folder: {app.template_folder}")
         logger.debug(f"Templates available: {os.listdir(app.template_folder)}")
+        logger.debug(f"Current working directory: {os.getcwd()}")
+        logger.debug(f"Directory contents: {os.listdir('.')}")
         return render_template('index.html')
     except Exception as e:
         logger.error(f"Error rendering index: {str(e)}")
