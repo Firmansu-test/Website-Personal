@@ -18,6 +18,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # 复制项目文件
 COPY . /app/
 
+# 确保templates目录存在
+RUN mkdir -p /app/templates && \
+    chmod 755 /app/templates
+
 # 创建上传目录并设置权限
 RUN mkdir -p /app/uploads && \
     chmod 777 /app/uploads && \
