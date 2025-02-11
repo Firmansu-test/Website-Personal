@@ -1,0 +1,35 @@
+# 定义支持的文件类型
+file_types:
+  - docx
+  - pdf
+  - xlsx
+  - txt
+
+# 定义解析规则
+parsing_rules:
+  docx: "使用 python-docx 解析 Word 文件"
+  pdf: "使用 PyPDF2 或 pdfplumber 解析 PDF 文件"
+  xlsx: "使用 pandas 和 openpyxl 解析 Excel 文件"
+  txt: "直接读取文本文件"
+
+# 定义翻译规则
+translation_rules:
+  api_endpoint: "https://api.openai.com/v1/chat/completions"
+  method: "POST"
+  headers:
+    Content-Type: "application/json"
+
+# 定义结果处理规则
+result_handling:
+  display: "在网页上展示翻译结果"
+  download: "提供下载翻译后文件的选项"
+
+# 安全性规则
+security:
+  file_upload: "确保文件上传的安全性，防止恶意文件"
+  data_privacy: "保护用户数据隐私"
+
+# 用户体验规则
+user_experience:
+  interface: "提供良好的用户界面和体验"
+  feedback: "允许用户提供反馈以改进服务" 
