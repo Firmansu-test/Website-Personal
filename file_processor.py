@@ -97,6 +97,9 @@ class FileProcessor:
             translation_config = self.rules['translation_rules']
             
             api_key = os.getenv('OPENAI_API_KEY')
+            if not api_key:
+                logger.error("OpenAI API key not found")
+                raise ValueError("OpenAI API key not configured")
             logger.debug(f"API Key length: {len(api_key) if api_key else 'None'}")
             
             headers = {
