@@ -8,6 +8,7 @@ WORKDIR /app
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PORT=${PORT:-5000}
+ENV LOG_DIR=/app/logs
 
 # 安装系统依赖
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -19,7 +20,9 @@ COPY . /app/
 
 # 创建上传目录并设置权限
 RUN mkdir -p /app/uploads && \
-    chmod 777 /app/uploads
+    chmod 777 /app/uploads && \
+    mkdir -p /app/logs && \
+    chmod 777 /app/logs
 
 # 安装Python依赖
 RUN pip install --no-cache-dir -r requirements.txt
