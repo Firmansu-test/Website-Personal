@@ -31,4 +31,4 @@ jobs:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         TRANSLATION_API_ENDPOINT: ${{ secrets.TRANSLATION_API_ENDPOINT }}
       run: |
-        python app.py
+        gunicorn -w 4 -b 0.0.0.0:5000 app:app
