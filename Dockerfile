@@ -7,7 +7,7 @@ WORKDIR /app
 # 设置环境变量
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV PORT=${PORT:-5000}
+ENV PORT=${PORT:-8080}
 ENV LOG_DIR=/app/logs
 
 # 安装系统依赖
@@ -40,4 +40,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 EXPOSE ${PORT}
 
 # 启动命令
-CMD gunicorn --bind 0.0.0.0:$PORT app:app --workers 4 --timeout 120 
+CMD gunicorn --bind "0.0.0.0:${PORT}" app:app --workers 4 --timeout 120 --log-level debug 
