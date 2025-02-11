@@ -15,17 +15,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
 
-# 复制项目文件
-COPY . /app/
-
-# 确保templates目录存在
+# 创建必要的目录
 RUN mkdir -p /app/templates && \
-    chmod 755 /app/templates
+    mkdir -p /app/uploads && \
+    mkdir -p /app/logs
 
-# 创建上传目录并设置权限
-RUN mkdir -p /app/uploads && \
+# 复制项目文件
+COPY requirements.txt .
+COPY *.py .
+COPY cursorrules.yaml .
+
+# 特别复制模板目录
+COPY templates/* /app/templates/
+
+# 设置目录权限
+RUN chmod 755 /app/templates && \
     chmod 777 /app/uploads && \
-    mkdir -p /app/logs && \
     chmod 777 /app/logs
 
 # 安装Python依赖
