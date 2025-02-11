@@ -1,4 +1,4 @@
-name: Deploy
+name: CI
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,12 +23,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
-    - name: Run application
-      env:
-        FLASK_APP: app.py
-        FLASK_ENV: production
-        SECRET_KEY: ${{ secrets.SECRET_KEY }}
-        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        TRANSLATION_API_ENDPOINT: ${{ secrets.TRANSLATION_API_ENDPOINT }}
+    - name: Run tests
       run: |
-        gunicorn -w 4 -b 0.0.0.0:5000 app:app
+        pytest
