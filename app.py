@@ -5,6 +5,10 @@ from werkzeug.utils import secure_filename
 from dotenv import load_dotenv
 import time
 
+#获取OPEN AI API密钥和端点
+openai_api_key = os.getenv('OPENAI_API_KEY')
+translation_api_endpoint = os.getenv('TRANSLATION_API_ENDPOINT')
+
 # 加载环境变量
 load_dotenv()
 
