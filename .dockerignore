@@ -22,5 +22,5 @@ coverage.xml
 .venv
 .DS_Store
 uploads/*
-!templates/
-!templates/index.html 
+!templates
+!templates/* 
